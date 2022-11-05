@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  description: "Задание GPN Cup 2022 (Java)"
+  title: VK Case Open API
+  version: "1.0"
+paths:
+  /isMember:
+    get:
+      description: |
+        Получение ФИО поьзователя VK и признака участника группы VK
+      parameters:
+        - in: header
+          name: vk_service_token
+          schema:
+            type: string
+            format: Oauth token сервисный ключ VK Api
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestMembershipDto"
+      responses:
+        "200":
+          description: Данные получены успешно.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VkResponseDto"
+        "400":
+          description: Невалидные параметры в теле запроса.
+        "404":
+          description: Пользователь не найден.
+          content:
+            object:
+              schema:
+                type: string
+              example: "User not found"
+        "500":
+          description: Ошибка при выполнении запроса к VK Api
+          content:
+            object:
+              schema:
+                type: string
+              example: "error_code: 5
+                        error_message: User authorization failed: invalid access_token (4)."
+
+components:
+  schemas:
+    RequestMembershipDto:
+      type: object
+      required:
+        - user_id
+        - group_id
+      properties:
+        user_id:
+          type: string
+          format: VK user id
+          nullable: false
+          description: id пользователя VK
+          example: "78385"
+        group_id:
+          type: string
+          format: VK group id
+          nullable: false
+          description: id группы VK
+          example: "93559769"
+      example:
+        user_id: "78385"
+        group_id: "93559769"
+    VkResponseDto:
+      type: object
+      required:
+        - last_name
+        - first_name
+        - middle_name
+        - member
+      properties:
+        last_name:
+          type: string
+          nullable: false
+          description: фамилия пользователя VK
+          example: "Ivanov"
+        first_name:
+          type: string
+          nullable: false
+          description: имя пользователя VK
+          example: "Ivan"
+        middle_name:
+          type: string
+          nullable: true
+          description: отчество пользователя VK
+          example: "Ivanovich"
+        member:
+          type: boolean
+          nullable: false
+          description: признак участника группы VK
+          example: true
+      example:
+        last_name: "Ivanov"
+        first_name: "Ivan"
+        middle_name: "Ivanovich"
+        member: true
