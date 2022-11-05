@@ -11,7 +11,7 @@ import javax.validation.Valid;
 public class RequestMembershipController {
 
     @GetMapping("isMember")
-    public Object isAGroupMember(@RequestHeader(name = "vk_service_token") String vkServiceToken,
+    public RedirectView isAGroupMember(@RequestHeader(name = "vk_service_token") String vkServiceToken,
                                        @Valid @RequestBody RequestMembershipDto request,
                                        RedirectAttributes attributes){
         attributes.addFlashAttribute("token", vkServiceToken);

@@ -2,40 +2,37 @@ package gpn.cup.vk_case.service;
 
 import gpn.cup.vk_case.exception.NoUserException;
 import gpn.cup.vk_case.exception.VkApiException;
+import gpn.cup.vk_case.url_consts.VkApiUrl;
 import gpn.cup.vk_case.utils.CustomJsonParser;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import gpn.cup.vk_case.utils.VkRequestMaker;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
 @Service
 public class VkApiService {
-    public Map<String, String> getFirstLastAndMiddleNameFromVk(String url, String vkServiceToken)
+
+    private final VkRequestMaker vkRequestMaker;
+
+    public VkApiService(VkRequestMaker vkRequestMaker) {
+        this.vkRequestMaker = vkRequestMaker;
+    }
+
+    public Map<String, String> getFirstLastAndMiddleNameFromVk(String userId, String vkServiceToken)
             throws VkApiException, NoUserException {
-        String responseBody = makeVkApiRequest(url, vkServiceToken);
+        String responseBody = vkRequestMaker.makeVkApiRequest(String.format(VkApiUrl.GET_USER_INFO_URL, userId), vkServiceToken);
         if(responseBody.startsWith("error", 2)){
             CustomJsonParser.parseError(responseBody);
         }
         return CustomJsonParser.parseFirstAndLastName(responseBody);
     }
 
-    public boolean vkApiIsMember(String url, String vkServiceToken) throws VkApiException {
-        String responseBody = makeVkApiRequest(url, vkServiceToken);
+    public boolean vkApiIsMember(String userId, String groupId, String vkServiceToken) throws VkApiException {
+        String responseBody = vkRequestMaker.makeVkApiRequest(String.format(VkApiUrl.IS_GROUP_MEMBER_URL, userId, groupId), vkServiceToken);
         if(responseBody.startsWith("error", 2)){
             CustomJsonParser.parseError(responseBody);
         }
         return CustomJsonParser.parseIsMemberResponse(responseBody);
     }
 
-    private String makeVkApiRequest(String url, String vkServiceToken){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(vkServiceToken);
-        HttpEntity<Object> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.GET, request, String.class);
-        return response.getBody();
-    }
 }

@@ -4,7 +4,6 @@ import gpn.cup.vk_case.dto.VkResponseDto;
 import gpn.cup.vk_case.exception.NoUserException;
 import gpn.cup.vk_case.exception.VkApiException;
 import gpn.cup.vk_case.service.VkApiService;
-import gpn.cup.vk_case.url_consts.VkApiUrl;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,10 +26,8 @@ public class VkApiController {
                                                   @RequestParam(name = "groupId") String groupId){
         try {
             Map<String, String> firstLastAndMiddleName =
-                    vkApiService.getFirstLastAndMiddleNameFromVk(String.format(VkApiUrl.GET_USER_INFO_URL, userId),
-                            vkServiceToken);
-            Boolean isMember = vkApiService.vkApiIsMember(String.format(VkApiUrl.IS_GROUP_MEMBER_URL, userId, groupId),
-                    vkServiceToken);
+                    vkApiService.getFirstLastAndMiddleNameFromVk(userId, vkServiceToken);
+            Boolean isMember = vkApiService.vkApiIsMember(userId, groupId, vkServiceToken);
             return new ResponseEntity<>(new VkResponseDto(firstLastAndMiddleName.get("last_name"),
                     firstLastAndMiddleName.get("first_name"),
                     firstLastAndMiddleName.get("middle_name"), isMember), HttpStatus.OK);

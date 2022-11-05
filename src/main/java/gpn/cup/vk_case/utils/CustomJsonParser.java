@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import gpn.cup.vk_case.exception.NoUserException;
 import gpn.cup.vk_case.exception.VkApiException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CustomJsonParser {
@@ -14,9 +15,16 @@ public class CustomJsonParser {
             JsonObject fields = new com.google.gson.JsonParser()
                     .parse(fieldsStr.substring(1, fieldsStr.length() - 1))
                     .getAsJsonObject();
-        return Map.of("last_name", fields.get("last_name").getAsString(),
-                "first_name", fields.get("first_name").getAsString(),
-                "middle_name", fields.get("nickname").getAsString());
+        Map<String, String> result = new HashMap<>();
+        result.put("last_name", fields.get("last_name").getAsString());
+        result.put("first_name", fields.get("first_name").getAsString());
+        String middle_name = fields.get("nickname").getAsString();
+        if(middle_name.equals("")){
+            result.put("middle_name", null);
+        }else {
+            result.put("middle_name", middle_name);
+        }
+        return result;
         }catch (IllegalStateException e){
             throw new NoUserException("User not found");
         }
