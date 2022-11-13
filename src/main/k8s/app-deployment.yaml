@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-map
+  namespace: default
+data:
+  spring.datasource.url: "jdbc:postgresql://db-service:5432/db"
+  spring.datasource.driver: "org.postgresql.Driver"
+  spring.datasource.username: "admin"
+  spring.datasource.password: "admin"
+  spring.jpa.database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+  spring.jpa.hibernate.ddl-auto: "update"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vk-case
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+  selector:
+    app: vk-case
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vk-case
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vk-case
+  template:
+    metadata:
+      labels:
+        app: vk-case
+    spec:
+      containers:
+        - name: vk-case
+          image: kovalenko22/vk-case
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - configMapRef:
+                name: app-config-map
+          ports:
+            - containerPort: 8080

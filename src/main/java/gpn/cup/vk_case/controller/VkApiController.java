@@ -56,7 +56,7 @@ public class VkApiController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (ExecutionException e) {
             String message = e.getCause().getMessage();
-            message = message.substring(message.indexOf(":") + 1);
+            message = message.substring(message.indexOf(":") + 2);
             if(message.equals("User not found")){
                 return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
             }
