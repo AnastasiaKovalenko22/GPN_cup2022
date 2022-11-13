@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Модель пользователя приложения
+ */
 @Entity
 @Table(name="users")
 @Getter
@@ -18,11 +21,17 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    /**
+     * Логин
+     */
     @NotBlank
     @Column(name = "username", nullable = false)
     @Id
     private String username;
 
+    /**
+     * Пароль
+     */
     @NotBlank
     @Column(name = "password", nullable = false)
     private String encodedPassword;

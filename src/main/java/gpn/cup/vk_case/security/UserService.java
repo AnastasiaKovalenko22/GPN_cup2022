@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Сервис авторизации пользователей
+ */
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository repository;
@@ -18,6 +21,12 @@ public class UserService implements UserDetailsService {
         this.repository = repository;
     }
 
+    /**
+     * Авторизация пользователя приложения
+     * @param username - логин
+     * @return - UserDetails
+     * @throws UsernameNotFoundException - нет пользователя с указанным логином
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repository.findByUsername(username);

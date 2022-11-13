@@ -7,7 +7,18 @@ import gpn.cup.vk_case.exception.VkApiException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Парсер ответов от VK Api
+ */
 public class CustomJsonParser {
+
+    /**
+     * Парсинг ФИО пользователя
+     * @param userInfo - строка ответа от VK (JSON)
+     * @return Map<String, String>, где ключи - (first_name, last_name, middle_name),
+     * значения - (имя, фамилия, отчество) соответственно
+     * @throws NoUserException - - нет пользователя с указанным id пользователя VK
+     */
     public static Map<String, String> parseFirstAndLastName(String userInfo) throws NoUserException {
         JsonObject jsonUserInfo = new com.google.gson.JsonParser().parse(userInfo).getAsJsonObject();
         String fieldsStr = String.valueOf(jsonUserInfo.get("response"));
@@ -30,12 +41,22 @@ public class CustomJsonParser {
         }
     }
 
+    /**
+     * Парсинг признака участника группы
+     * @param responseBody - строка ответа от VK (JSON)
+     * @return - true, если пользователь - участник группы, иначе false
+     */
     public static Boolean parseIsMemberResponse(String responseBody){
         JsonObject jsonResponseBody = new com.google.gson.JsonParser().parse(responseBody).getAsJsonObject();
         String strValueOfResponse = jsonResponseBody.get("response").getAsString();
         return strValueOfResponse.equals("1");
     }
 
+    /**
+     * Парсинг ошибки от VKApi
+     * @param responseBody - строка ответа от VK (JSON)
+     * @throws VkApiException - преобразованное исключение VK Api
+     */
     public static void parseError(String responseBody) throws VkApiException {
         JsonObject jsonResponseBody = new com.google.gson.JsonParser().parse(responseBody).getAsJsonObject();
         JsonObject errorObject = jsonResponseBody.get("error").getAsJsonObject();

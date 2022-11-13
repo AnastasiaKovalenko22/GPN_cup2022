@@ -16,9 +16,15 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Контроллер получения данных от VK
+ */
 @RestController
 public class VkApiController {
     private final VkApiService vkApiService;
+    /**
+     * Кэш
+     */
     private final LoadingCache<String, VkResponseDto> cache =
             CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES)
                     .maximumSize(100)
@@ -47,6 +53,13 @@ public class VkApiController {
         this.vkApiService = vkApiService;
     }
 
+    /**
+     * Получение ФИО пользователя VK и признака участника группы VK
+     * @param vkServiceToken - сервисный ключ приложения VK
+     * @param request - id пользователя VK и id группы VK
+     * @return - ФИО пользователя VK и признак участника группы VK
+     * или сообщение об ошибке
+     */
     @GetMapping("isMember")
     public ResponseEntity<Object> isMember(@RequestHeader(name = "vk_service_token") String vkServiceToken,
                                            @Valid @RequestBody RequestMembershipDto request) {

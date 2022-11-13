@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * Контроллер регистрации
+ */
 @RestController
 @RequestMapping("register")
 public class RegistrationController {
@@ -24,6 +27,12 @@ public class RegistrationController {
         this.userService = userService;
     }
 
+    /**
+     * Регистрация пользователя по логину и паролю
+     * @param userDataDto - логин и пароль пользователя
+     * @return - сообщение об успешной регистрации или
+     * о том, что пользователь с таким логином уже существует
+     */
     @PostMapping
     public ResponseEntity<String> register(@RequestBody @Valid UserDataDto userDataDto){
         try {
