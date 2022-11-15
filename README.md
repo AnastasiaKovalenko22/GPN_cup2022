@@ -21,7 +21,7 @@
    
 2)Перейти в папку docker: <code>cd {путь до папки с проектом}/src/main/docker</code>
    
-3)Собрать docker образ приложения с тегом {your docker hub username}/vk-case: <code>sudo docker build -t {your docker hub username}/vk-case .</code>
+3)Собрать docker образ приложения с тегом {your docker hub username}/vk-case: <code>sudo docker build -t {your docker hub username}/vk-case ./</code>
 
 4)Запушить docker образ приложения в свой docker hub: <code>sudo docker push {your docker hub username}/vk-case</code>
    
